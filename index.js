@@ -1,3 +1,3 @@
 new Gallery(document.getElementById('gallery'),{
-    margin: 80
+    margin: 20
 });
