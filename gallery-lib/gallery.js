@@ -19,6 +19,7 @@ class Gallery {
         this.currentSlideWasChange = false;
         this.settings = {
             margin: options.margin || 0,
+            dots: options.dots || false,
         }
         this.functionBind = this.functionBind.bind(this);
 
@@ -73,12 +74,14 @@ class Gallery {
             })
         );
 
+        if (this.settings.dots) {
+            this.dotsNode.innerHTML = Array.from(Array(this.size).keys()).map((key) => (
+                `<button class="${GalleryDotClassName} ${key === this.currentSlide ? GalleryDotActiveClassName : ''}"></button>`
+            )).join(''); 
+    
+            this.dotNodes = this.dotsNode.querySelectorAll(`.${GalleryDotClassName}`);
+        }
         
-        this.dotsNode.innerHTML = Array.from(Array(this.size).keys()).map((key) => (
-            `<button class="${GalleryDotClassName} ${key === this.currentSlide ? GalleryDotActiveClassName : ''}"></button>`
-        )).join(''); 
-
-        this.dotNodes = this.dotsNode.querySelectorAll(`.${GalleryDotClassName}`);
         this.navLeft = this.containerNode.querySelector(`.${GalleryNavLeftClassName}`);
         this.navRight = this.containerNode.querySelector(`.${GalleryNavRightClassName}`);
     }
@@ -92,7 +95,10 @@ class Gallery {
         this.resetStyleTransition();
         this.lineNode.style.width = `${this.size * (this.width + this.settings.margin)}px`;
         this.setStylePositions();
-        this.changeActiveDotClass();
+        
+        if (this.settings.dots) {
+            this.changeActiveDotClass();
+        }
         this.changeDisabledNav();
 
         Array.from(this.slideNodes).forEach((slideNodes) =>{
@@ -111,7 +117,9 @@ class Gallery {
         window.addEventListener('touchend', this.stopDrag);
         window.addEventListener('pointercancel', this.stopDrag);
 
-        this.dotsNode.addEventListener('click', this.clickDots);
+        if (this.settings.dots) {
+            this.dotsNode.addEventListener('click', this.clickDots);
+        }
         this.navLeft.addEventListener('click', this.moveToLeft);
         this.navRight.addEventListener('click', this.moveToRight);
     }
@@ -125,7 +133,9 @@ class Gallery {
         window.removeEventListener('touchend', this.stopDrag);
         window.removeEventListener('pointercancel', this.stopDrag);
 
-        this.dotsNode.removeEventListener('click', this.clickDots);
+        if (this.settings.dots) {
+            this.dotsNode.removeEventListener('click', this.clickDots);
+        }
         this.navLeft.removeEventListener('click', this.moveToLeft);
         this.navRight.removeEventListener('click', this.moveToRight);
     }
@@ -231,7 +241,9 @@ class Gallery {
         this.x = -this.currentSlide * (this.width + this.settings.margin) ;
         this.setStylePositions();
         this.setStyleTransition(countSwipes);
-        this.changeActiveDotClass();
+        if (this.settings.dots) {
+            this.changeActiveDotClass();
+        }
         this.changeDisabledNav();
     }
 

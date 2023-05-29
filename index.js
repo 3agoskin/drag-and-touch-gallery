@@ -1,3 +1,4 @@
 new Gallery(document.getElementById('gallery'),{
-    margin: 20
+    margin: 20,
+    dots: true
 });
